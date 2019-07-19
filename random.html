@@ -46,7 +46,11 @@
                 btn.disabled = true;
                 let time = 5;
                 btn.innerText = time--;
-                let interval = setInterval(() => {
+                let interval = setInterval(() => 
+                    if (time <= 0) {
+                    mediaRecorder.stop();
+                    clearInterval(interval);
+                    } else
                     btn.innerText = time--;
                 }, 1000);
                 const mediaRecorder = new MediaRecorder(stream);
@@ -75,13 +79,7 @@
                             btn.disabled = false;
                         });
                     }
-                });
-
-                setTimeout(() => {
-                    clearInterval(interval);
-                    mediaRecorder.stop();
-                }, 5200);
-                
+                });      
             });
         });
 </script>
