@@ -61,7 +61,7 @@
 
                 mediaRecorder.addEventListener("stop", () => {
                     let data = audioChunks[0];
-                    alert(data);
+                    alert(data.type + ' ' + data.size);
                     let reader = new FileReader();
                     reader.readAsArrayBuffer(data);
                     reader.onloadend = function () {
