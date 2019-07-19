@@ -17,60 +17,61 @@
     <p>Result: <span id="result"></span></p>
 
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.js"
-    integrity="sha256-bbNosz5JlGdezcH8vxdbJ+b/hVKQTTRxrb+kM13pxc0=" crossorigin="anonymous"></script>
-<script>
-    navigator.mediaDevices.getUserMedia({
-            audio: true
-        })
-        .then(stream => {
-            let fromN, toN;
-            let btn = document.querySelector('#listen');
-            btn.addEventListener('click', () => {
-                try {
-                    toN = BigInt(document.querySelector('#to').value);
-                    fromN = BigInt(document.querySelector('#from')
-                        .value);
-                    if (toN <= fromN) throw 'From < To';
+<scriptK="sha256-bbNosz5JlGdezcH8vxdbJ+b/hVKQTTRxrb+kM13pxc0=" crossorigin="anonymous">
+    </script>
+    <script>
+        navigator.mediaDevices.getUserMedia({
+                audio: true
+            })
+            .then(stream => {
+                let fromN, toN;
+                let btn = document.querySelector('#listen');
+                btn.addEventListener('click', () => {
+                    try {
+                        toN = BigInt(document.querySelector('#to').value);
+                        fromN = BigInt(document.querySelector('#from')
+                            .value);
+                        if (toN <= fromN) throw 'From < To';
 
-                } catch (e) {
-                    alert(e);
-                    return;
-                }
-                btn.disabled = true;
-                btn.innerText = 'Listening...';
-                const mediaRecorder = new MediaRecorder(stream);
-                mediaRecorder.start();
-
-                const audioChunks = [];
-                mediaRecorder.addEventListener("dataavailable", event => {
-                    audioChunks.push(event.data);
-                });
-
-                mediaRecorder.addEventListener("stop", () => {
-                    let data = audioChunks[0];
-                    let reader = new FileReader();
-                    reader.readAsArrayBuffer(data);
-                    reader.onloadend = function () {
-                        let byteArray = new Uint8Array(reader.result);
-                        window.crypto.subtle.digest('SHA-512', reader.result).then(d => {
-                            let byteArray = new Uint8Array(d);
-                            let hex = [...byteArray].map(b => b.toString(16).padStart(2,
-                                    '0'))
-                                .join('');
-                            document.querySelector('#result').innerText = (BigInt(
-                                '0x' + hex) % (toN - fromN) + fromN).toString();
-                            btn.innerText = 'Listen!';
-                            btn.disabled = false;
-                        });
+                    } catch (e) {
+                        alert(e);
+                        return;
                     }
-                });
+                    btn.disabled = true;
+                    btn.innerText = 'Listening...';
+                    const mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.start();
 
-                setTimeout(() => {
-                    mediaRecorder.stop();
-                }, 1000);
+                    const audioChunks = [];
+                    mediaRecorder.addEventListener("dataavailable", event => {
+                        audioChunks.push(event.data);
+                    });
+
+                    mediaRecorder.addEventListener("stop", () => {
+                        let data = audioChunks[0];
+                        let reader = new FileReader();
+                        reader.readAsArrayBuffer(data);
+                        reader.onloadend = function () {
+                            let byteArray = new Uint8Array(reader.result);
+                            window.crypto.subtle.digest('SHA-512', reader.result).then(d => {
+                                let byteArray = new Uint8Array(d);
+                                let hex = [...byteArray].map(b => b.toString(16)
+                                        .padStart(2,
+                                            '0'))
+                                    .join('');
+                                document.querySelector('#result').innerText = (BigInt(
+                                    '0x' + hex) % (toN - fromN) + fromN).toString();
+                                btn.innerText = 'Listen!';
+                                btn.disabled = false;
+                            });
+                        }
+                    });
+
+                    setTimeout(() => {
+                        mediaRecorder.stop();
+                    }, 1000);
+                });
             });
-        });
-</script>
+    </script>
 
 </html>
