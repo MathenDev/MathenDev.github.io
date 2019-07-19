@@ -45,13 +45,13 @@
                 }
                 btn.disabled = true;
                 let time = 5;
-                btn.innerText = time--;
+                btn.innerText = time;
                 let interval = setInterval(() => 
+                    btn.innerText = --time;
                     if (time <= 0) {
                     mediaRecorder.stop();
                     clearInterval(interval);
-                    } else
-                    btn.innerText = time--;
+                    }
                 }, 1000);
                 const mediaRecorder = new MediaRecorder(stream);
                 mediaRecorder.start();
