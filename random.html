@@ -60,10 +60,7 @@
                 });
 
                 mediaRecorder.addEventListener("stop", () => {
-                    let data = audioChunks[0];
-                    const audioUrl = URL.createObjectURL(data);
-      const audio = new Audio(audioUrl);
-      audio.play();      
+                    let data = audioChunks[0];     
                     let reader = new FileReader();
                     reader.readAsArrayBuffer(data);
                     reader.onloadend = function () {
