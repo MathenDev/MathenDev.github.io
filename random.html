@@ -74,7 +74,7 @@
                                         '0'))
                                 .join('');
                             document.querySelector('#result').innerText = (BigInt(
-                                '0x' + hex) % (toN - fromN) + fromN).toString();
+                                '0x' + hex) % (toN - fromN + 1n) + fromN).toString();
                             btn.innerText = 'Listen!';
                             btn.disabled = false;
                         });
