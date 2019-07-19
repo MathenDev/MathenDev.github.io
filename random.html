@@ -46,7 +46,7 @@
                 btn.disabled = true;
                 let time = 5;
                 btn.innerText = time;
-                let interval = setInterval(() => 
+                let interval = setInterval(() => {
                     btn.innerText = --time;
                     if (time <= 0) {
                     mediaRecorder.stop();
