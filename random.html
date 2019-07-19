@@ -49,9 +49,7 @@
                 let interval = setInterval(() => {
                     btn.innerText = time--;
                 }, 1000);
-                const mediaRecorder = new MediaRecorder(stream, {
-                    mimeType: 'audio/webm;codecs=pcm'
-                });
+                const mediaRecorder = new MediaRecorder(stream);
                 mediaRecorder.start();
 
                 const audioChunks = [];
@@ -65,7 +63,7 @@
                     reader.readAsArrayBuffer(data);
                     reader.onloadend = function () {
                         let byteArray = new Uint8Array(reader.result);
-                        window.crypto.subtle.digest('SHA-512', reader.result).then(d => {
+                        window.crypto.subtle.digest('SHA-256', reader.result).then(d => {
                             let byteArray = new Uint8Array(d);
                             let hex = [...byteArray].map(b => b.toString(16)
                                     .padStart(2,
