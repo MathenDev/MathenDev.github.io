@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Public Voice</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    Object.defineProperty(Blob.prototype, 'arrayBuffer', {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        value: function arrayBuffer() {
+            return new Response(this).arrayBuffer();
+        }
+    });
+    let sc = new WebSocket('wss://connect.websocket.in/mathenjee?room_id=public_voice');
+    sc.binaryType = "arraybuffer";
+    sc.addEventListener('open', () => {
+        console.log('Socket connected.');
+        navigator.mediaDevices.getUserMedia({
+                audio: true
+            })
+            .then(stream => {
+                let te = new TextEncoder();
+                let mediasource = new MediaSource();
+                const mediaRecorder = new MediaRecorder(stream, {
+                    audioBitsPerSecond: 24000
+                });
+                mediasource.addEventListener('sourceopen', () => {
+                    let sb = mediasource.addSourceBuffer('audio/webm;codecs=opus');
+                    mediaRecorder.start(100);
+                    sc.addEventListener('message', (e) => {
+                        let data = e.data;
+                        // console.log(data);
+                        dataURItoBlob(data).arrayBuffer(buf=>{
+                            sb.appendBuffer(buf);
+                        });
+                    });
+                });
+                mediaRecorder.addEventListener("dataavailable", event => {
+                    let f  = new FileReader();
+                    f.readAsDataURL(event.data);
+                    f.onload = (e) => {
+                        sc.send(e.target.result);
+                    };
+                });
+                let audio = new Audio(URL.createObjectURL(mediasource));
+                audio.play();
+
+            });
+    });
+    function dataURItoBlob(dataURI) {
+  // convert base64 to raw binary data held in a string
+  // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+  var byteString = atob(dataURI.split(',')[1]);
+
+  // separate out the mime component
+  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+  // write the bytes of the string to an ArrayBuffer
+  var ab = new ArrayBuffer(byteString.length);
+
+  // create a view into the buffer
+  var ia = new Uint8Array(ab);
+
+  // set the bytes of the buffer to the correct values
+  for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+  }
+
+  // write the ArrayBuffer to a blob, and you're done
+  var blob = new Blob([ab], {type: mimeString});
+  return blob;
+
+}
+</script>
+
+</html>
