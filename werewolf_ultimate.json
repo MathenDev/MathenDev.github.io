@@ -1,0 +1,172 @@
+[{
+        "id": "vlg",
+        "name": "villager",
+        "cards": 5
+    },
+    {
+        "id": "ser",
+        "name": "seer",
+        "value": 7
+    },
+    {
+        "id": "wtc",
+        "name": "witch",
+        "value": 4
+    },
+    {
+        "id": "hnt",
+        "name": "hunter",
+        "value": 3
+    },
+    {
+        "id": "wfc",
+        "name": "wolf cub",
+        "value": -8
+    },
+    {
+        "id": "src",
+        "name": "sorceress",
+        "value": -3
+    },
+    {
+        "id": "bdg",
+        "name": "bodygoard",
+        "value": 3
+    },
+    {
+        "name": "spellcaster",
+        "id": "spl",
+        "team": "vlg"
+    },
+    {
+        "name": "mason",
+        "value": 2,
+        "cards": 5,
+        "id": "msn"
+    },
+    {
+        "name": "apprentice seer",
+        "value": 4,
+        "id": "aps"
+    },
+    {
+        "name": "aura seer",
+        "value": 3,
+        "id": "ars"
+    },
+    {
+        "name": "cult leader",
+        "id": "cll"
+    },
+    {
+        "name": "disabled",
+        "value": 3,
+        "id": "dsb"
+    },
+    {
+        "name": "doppelgänger",
+        "value": -2,
+        "id": "dpp"
+    },
+    {
+        "name": "hoodlum",
+        "value": 0,
+        "id": "hdl"
+    },
+    {
+        "name": "mayor",
+        "value": 2,
+        "id": "myr"
+    },
+    {
+        "name": "minion",
+        "value": -6,
+        "id": "mnn"
+    },
+    {
+        "name": "old hag",
+        "id": "olh"
+    },
+    {
+        "name": "P.I.",
+        "value": 3,
+        "id": "pri"
+    },
+    {
+        "name": "priest",
+        "value": 3,
+        "id": "prs"
+    },
+    {
+        "name": "prince",
+        "value": 3,
+        "id": "prn"
+    },
+    {
+        "name": "vampire",
+        "value": -7,
+        "id": "vmp"
+    },
+    {
+        "name": "tanner",
+        "value": -2,
+        "id": "tnn"
+    },
+    {
+        "name": "troublemaker",
+        "value": -3,
+        "id": "trb"
+    },
+    {
+        "name": "tough_guy",
+        "value": 3,
+        "id": "tgh"
+    },
+    {
+        "name": "cursed",
+        "value": -3,
+        "id": "crs"
+    },
+    {
+        "name": "village idiot",
+        "value": 2,
+        "id": "vli"
+    },
+    {
+        "name": "cupid",
+        "value": -3,
+        "id": "cpd"
+    },
+    {
+        "name": "drunk",
+        "value": 4,
+        "id": "drn"
+    },
+    {
+        "name": "lone wolf",
+        "value": -5,
+        "id": "lnw"
+
+    },
+    {
+        "name": "lycan",
+        "value": -1,
+        "id": "lcn"
+    },
+    {
+        "name": "pacifist",
+        "value": -1,
+        "id": "pcf"
+    },
+    {
+        "name": "werewolf",
+        "value": -6,
+        "cards": 5,
+        "id": "wrw"
+    },
+    {
+        "name": "ghost",
+        "value": 2,
+        "id": "ghs"
+    }
+]
