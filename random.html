@@ -45,13 +45,15 @@
                 }
                 btn.disabled = true;
                 let time = 5;
-                btn.innerText = time--;
+                btn.innerText = time;
                 let interval = setInterval(() => {
-                    btn.innerText = time--;
+                    btn.innerText = --time;
+                    if (time <= 0) {
+                    mediaRecorder.stop();
+                    clearInterval(interval);
+                    }
                 }, 1000);
-                const mediaRecorder = new MediaRecorder(stream, {
-                    mimeType: 'audio/webm;codecs=pcm'
-                });
+                const mediaRecorder = new MediaRecorder(stream);
                 mediaRecorder.start();
 
                 const audioChunks = [];
@@ -60,30 +62,24 @@
                 });
 
                 mediaRecorder.addEventListener("stop", () => {
-                    let data = audioChunks[0];
+                    let data = audioChunks[0];   
                     let reader = new FileReader();
                     reader.readAsArrayBuffer(data);
                     reader.onloadend = function () {
                         let byteArray = new Uint8Array(reader.result);
-                        window.crypto.subtle.digest('SHA-512', reader.result).then(d => {
+                        window.crypto.subtle.digest('SHA-256', reader.result).then(d => {
                             let byteArray = new Uint8Array(d);
                             let hex = [...byteArray].map(b => b.toString(16)
                                     .padStart(2,
                                         '0'))
                                 .join('');
                             document.querySelector('#result').innerText = (BigInt(
-                                '0x' + hex) % (toN - fromN) + fromN).toString();
+                                '0x' + hex) % (toN - fromN + 1n) + fromN).toString();
                             btn.innerText = 'Listen!';
                             btn.disabled = false;
                         });
                     }
-                });
-
-                setTimeout(() => {
-                    clearInterval(interval);
-                    mediaRecorder.stop();
-                }, 5000);
-                
+                });      
             });
         });
 </script>
