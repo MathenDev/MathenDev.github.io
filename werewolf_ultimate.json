@@ -125,11 +125,6 @@
         "id": "crs"
     },
     {
-        "name": "village idiot",
-        "value": 2,
-        "id": "vli"
-    },
-    {
         "name": "cupid",
         "value": -3,
         "id": "cpd"
@@ -149,11 +144,6 @@
         "name": "lycan",
         "value": -1,
         "id": "lcn"
-    },
-    {
-        "name": "pacifist",
-        "value": -1,
-        "id": "pcf"
     },
     {
         "name": "werewolf",
