@@ -67,5 +67,7 @@ function validate(data, criteria) {
     let msn = cardMap.get('msn');
     if (msn && msn.length == 1)
         return false;
+if (cardMap.get('aps') && !cardMap.get('ser'))
+return false;
     return true;
 }
