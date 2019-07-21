@@ -1,7 +1,7 @@
 [{
-        "id": "vlg",
+        "id": "vll",
         "name": "villager",
-        "cards": 5
+        "cards": 10
     },
     {
         "id": "ser",
@@ -41,7 +41,7 @@
     {
         "name": "mason",
         "value": 2,
-        "cards": 5,
+        "cards": 3,
         "id": "msn"
     },
     {
@@ -84,10 +84,6 @@
         "id": "mnn"
     },
     {
-        "name": "old hag",
-        "id": "olh"
-    },
-    {
         "name": "P.I.",
         "value": 3,
         "id": "pri"
@@ -105,7 +101,8 @@
     {
         "name": "vampire",
         "value": -7,
-        "id": "vmp"
+        "id": "vmp",
+        "cards": 4
     },
     {
         "name": "tanner",
@@ -118,7 +115,7 @@
         "id": "trb"
     },
     {
-        "name": "tough_guy",
+        "name": "tough guy",
         "value": 3,
         "id": "tgh"
     },
@@ -161,7 +158,7 @@
     {
         "name": "werewolf",
         "value": -6,
-        "cards": 5,
+        "cards": 6,
         "id": "wrw"
     },
     {
