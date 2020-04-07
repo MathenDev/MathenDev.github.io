@@ -1,6 +1,7 @@
 const hourElem = document.getElementById("hour");
 const minuteElem = document.getElementById("minute");
 const secondElem = document.getElementById("second");
+const minusElem = document.getElementById("minus");
 const STATE = {
     wakingTime: {
         hour: 5,
@@ -59,7 +60,9 @@ function update() {
     const hms = getRemainingHMS();
     if (hms.overnight) {
         document.body.classList.add("contrast");
+        minusElem.hidden = true;
     }
+    minusElem.hidden = false;
     hourElem.innerText = String(hms.hours).padStart(2, '0');
     minuteElem.innerText = String(hms.minutes).padStart(2, '0');
     secondElem.innerText = String(hms.seconds).padStart(2, '0');
