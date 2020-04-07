@@ -61,8 +61,9 @@ function update() {
     if (hms.overnight) {
         document.body.classList.add("contrast");
         minusElem.hidden = true;
+    } else {
+        minusElem.hidden = false;
     }
-    minusElem.hidden = false;
     hourElem.innerText = String(hms.hours).padStart(2, '0');
     minuteElem.innerText = String(hms.minutes).padStart(2, '0');
     secondElem.innerText = String(hms.seconds).padStart(2, '0');
