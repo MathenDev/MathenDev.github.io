@@ -69,6 +69,7 @@ function getRemainingHMS() {
 function update() {
     const hms = getRemainingHMS();
     if (STATE.isRemainingTimeDifferent(hms)) {
+        STATE.remainingTime = hms;
         if (hms.overnight) {
             document.body.classList.add("contrast");
             minusElem.hidden = false;
