@@ -11,6 +11,16 @@ const STATE = {
         hours: 7,
         minutes: 15
     },
+    remainingTime: {
+        hours: 0,
+        minutes: 0,
+        seconds: 0
+    },
+
+    isRemainingTimeDifferent: function (thatR) {
+        var thisR = this.remainingTime;
+        return thisR.overnight != thatR.overnight || thisR.hours != thatR.hours || thisR.minutes != thatR.minutes || thisR.seconds != thatR.seconds;
+    },
     getWakingTimeInMilis: function () {
         return toMilis(this.wakingTime.hour, this.wakingTime.minute);
     },
@@ -58,14 +68,18 @@ function getRemainingHMS() {
 
 function update() {
     const hms = getRemainingHMS();
-    if (hms.overnight) {
-        document.body.classList.add("contrast");
-        minusElem.hidden = false;
-    } else {
-        minusElem.hidden = true;
+    if (STATE.isRemainingTimeDifferent(hms)) {
+        if (hms.overnight) {
+            document.body.classList.add("contrast");
+            minusElem.hidden = false;
+        } else {
+            minusElem.hidden = true;
+        }
+        hourElem.innerText = String(hms.hours).padStart(2, '0');
+        minuteElem.innerText = String(hms.minutes).padStart(2, '0');
+        secondElem.innerText = String(hms.seconds).padStart(2, '0');
     }
-    hourElem.innerText = String(hms.hours).padStart(2, '0');
-    minuteElem.innerText = String(hms.minutes).padStart(2, '0');
-    secondElem.innerText = String(hms.seconds).padStart(2, '0');
+    window.requestAnimationFrame(update);
 }
-const updateID = setInterval(update, 1000 / 60);
+
+window.requestAnimationFrame(update);
