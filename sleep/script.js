@@ -58,10 +58,10 @@ function getRemainingHMS() {
 function update() {
     const hms = getRemainingHMS();
     if (hms.overnight) {
-        document.body.classList.add("red");
+        document.body.classList.add("contrast");
     }
     hourElem.innerText = String(hms.hours).padStart(2, '0');
     minuteElem.innerText = String(hms.minutes).padStart(2, '0');
     secondElem.innerText = String(hms.seconds).padStart(2, '0');
 }
-const updateID = setInterval(update, 100);
+const updateID = setInterval(update, 1000 / 60);
