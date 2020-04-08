@@ -38,8 +38,6 @@ class Duration {
         return new Duration(-this.totalMiliseconds);
     }
 
-
-
     add(that = new Duration()) {
         return new Duration(this.totalMiliseconds + that.totalMiliseconds);
     }
@@ -80,39 +78,47 @@ const minusElem = document.getElementById("minus");
 const PROPERTIES = {
     wakeClock: new Clock(6, 0),
     sleepDuration: new Duration(0, 0, 15, 7),
+    previousDuration: new Duration()
 };
 
 function getRemainingDuration(date = new Date()) {
-    return new Promise((res) => {
-        const currentClock = Clock.extractCurrentClock(date);
-        const wakeClock = PROPERTIES.wakeClock;
-        const gap = currentClock.differentFrom(wakeClock);
-        if (gap.negative) {
-            res(PROPERTIES.sleepDuration.add(gap).contrast);
-            return;
-        }
-        res(DAY_DURATION.minus(gap).minus(PROPERTIES.sleepDuration));
-    });
+    const currentClock = Clock.extractCurrentClock(date);
+    const wakeClock = PROPERTIES.wakeClock;
+    const gap = currentClock.differentFrom(wakeClock);
+    if (gap.negative) {
+        return PROPERTIES.sleepDuration.add(gap).contrast;
+    }
+    return DAY_DURATION.minus(gap).minus(PROPERTIES.sleepDuration);
 }
+
 
 
 function update() {
+    const duration = getRemainingDuration(new Date());
+    updateClock(duration);
+    PROPERTIES.previousDuration = duration;
     window.requestAnimationFrame(update);
-    getRemainingDuration(new Date()).then(updateClock);
 }
 
 function updateClock(duration = new Duration()) {
-    if (duration.negative) {
-        document.body.classList.add("contrast");
-        minusElem.hidden = false;
-    } else {
-        document.body.classList.remove("contrast");
-        minusElem.hidden = true;
+    const previousDuration = PROPERTIES.previousDuration;
+    if (previousDuration.negative !== duration.negative) {
+        if (duration.negative) {
+            document.body.classList.add("contrast");
+            minusElem.hidden = false;
+        } else {
+            document.body.classList.remove("contrast");
+            minusElem.hidden = true;
+        }
     }
-    hourElem.textContent = String(duration.hour).padStart(2, '0');
-    minuteElem.textContent = String(duration.minute).padStart(2, '0');
-    secondElem.textContent = String(duration.second).padStart(2, '0');
-    milisecondElem.textContent = String(duration.milisecond).padStart(3, '0');
+    if (previousDuration.hour != duration.hour)
+        hourElem.textContent = String(duration.hour).padStart(2, '0');
+    if (previousDuration.minute != duration.minute)
+        minuteElem.textContent = String(duration.minute).padStart(2, '0');
+    if (previousDuration.second != duration.second)
+        secondElem.textContent = String(duration.second).padStart(2, '0');
+    if (previousDuration.milisecond != duration.milisecond)
+        milisecondElem.textContent = String(duration.milisecond).padStart(3, '0');
 }
 
 window.requestAnimationFrame(update);
