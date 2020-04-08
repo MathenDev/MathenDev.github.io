@@ -78,7 +78,6 @@ const minusElem = document.getElementById("minus");
 const PROPERTIES = {
     wakeClock: new Clock(6, 0),
     sleepDuration: new Duration(0, 0, 15, 7),
-    previousDuration: new Duration()
 };
 
 function getRemainingDuration(date = new Date()) {
@@ -96,33 +95,21 @@ function getRemainingDuration(date = new Date()) {
 function update() {
     const duration = getRemainingDuration(new Date());
     updateClock(duration);
-    PROPERTIES.previousDuration = duration;
     window.requestAnimationFrame(update);
 }
 
 function updateClock(duration = new Duration()) {
-    const previousDuration = PROPERTIES.previousDuration;
-    if (previousDuration.negative != duration.negative) {
-        if (duration.negative) {
-            document.body.classList.add("contrast");
-            minusElem.hidden = false;
-        } else {
-            document.body.classList.remove("contrast");
-            minusElem.hidden = true;
-        }
+    if (duration.negative) {
+        document.body.classList.add("contrast");
+        minusElem.hidden = false;
+    } else {
+        document.body.classList.remove("contrast");
+        minusElem.hidden = true;
     }
-    const hour = duration.hour;
-    if (previousDuration.hour != hour)
-        hourElem.textContent = String(hour).padStart(2, '0');
-    const minute = duration.minute;
-    if (previousDuration.minute != minute)
-        minuteElem.textContent = String(minute).padStart(2, '0');
-    const second = duration.second;
-    if (previousDuration.second != second)
-        secondElem.textContent = String(second).padStart(2, '0');
-    const milisecond = duration.milisecond;
-    if (previousDuration.milisecond != milisecond)
-        milisecondElem.textContent = String(milisecond).padStart(3, '0');
+    hourElem.textContent = String(duration.hour).padStart(2, '0');
+    minuteElem.textContent = String(duration.minute).padStart(2, '0');
+    secondElem.textContent = String(duration.second).padStart(2, '0');
+    milisecondElem.textContent = String(duration.milisecond).padStart(3, '0');
 }
 
 window.requestAnimationFrame(update);
