@@ -76,7 +76,7 @@ const minusElem = document.getElementById("minus");
 
 
 const PROPERTIES = {
-    wakeClock: new Clock(6, 0),
+    wakeClock: new Clock(6, 30),
     sleepDuration: new Duration(0, 0, 15, 7),
 };
 
