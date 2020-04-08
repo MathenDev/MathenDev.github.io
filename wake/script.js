@@ -1,86 +1,118 @@
+class Duration {
+    constructor(miliseconds = 0, seconds = 0, minutes = 0, hours = 0) {
+        this.totalMiliseconds = miliseconds + 1000 * (seconds + 60 * (minutes + 60 * hours));
+    }
+    get totalSeconds() {
+        return this.totalMiliseconds / 1000;
+    }
+
+    get totalMinutes() {
+        return this.totalSeconds / 60;
+    }
+
+    get totalHours() {
+        return this.totalMinutes / 60;
+    }
+
+    get milisecond() {
+        return Math.abs(this.totalMiliseconds % 1000);
+    }
+
+    get second() {
+        return Math.floor(Math.abs(this.totalSeconds) % 60);
+    }
+
+    get minute() {
+        return Math.floor(Math.abs(this.totalMinutes) % 60);
+    }
+
+    get hour() {
+        return Math.floor(Math.abs(this.totalHours));
+    }
+
+    get negative() {
+        return this.totalMiliseconds < 0;
+    }
+
+    get contrast() {
+        return new Duration(-this.totalMiliseconds);
+    }
+
+
+
+    add(that = new Duration()) {
+        return new Duration(this.totalMiliseconds + that.totalMiliseconds);
+    }
+
+    minus(that = new Duration()) {
+        return new Duration(this.totalMiliseconds - that.totalMiliseconds);
+    }
+
+}
+
+
+const DAY_DURATION = new Duration(0, 0, 0, 24);
+
+class Clock {
+    constructor(hour = 0, minute = 0, second = 0, milisecond = 0) {
+        var totalMiliseconds = milisecond + 1000 * (second + 60 * (minute + 60 * hour));
+        const moment = totalMiliseconds % DAY_DURATION.totalMiliseconds;
+        this.moment = moment > 0 ? moment : DAY_DURATION.totalMiliseconds + moment;
+    }
+
+    differentFrom(that = new Clock()) {
+        return new Duration(this.moment - that.moment);
+    }
+
+    static extractCurrentClock(date = new Date()) {
+        return new Clock(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
+    }
+
+}
+
 const hourElem = document.getElementById("hour");
 const minuteElem = document.getElementById("minute");
 const secondElem = document.getElementById("second");
+const milisecondElem = document.getElementById("milisecond");
 const minusElem = document.getElementById("minus");
-const STATE = {
-    wakingTime: {
-        hour: 5,
-        minute: 30
-    },
-    sleepTime: {
-        hours: 7,
-        minutes: 15
-    },
-    remainingTime: {
-        hours: 0,
-        minutes: 0,
-        seconds: 0
-    },
 
-    isRemainingTimeDifferent: function (thatR) {
-        var thisR = this.remainingTime;
-        return thisR.overnight != thatR.overnight || thisR.hours != thatR.hours || thisR.minutes != thatR.minutes || thisR.seconds != thatR.seconds;
-    },
-    getWakingTimeInMilis: function () {
-        return toMilis(this.wakingTime.hour, this.wakingTime.minute);
-    },
-    getSleepTimeInMilis: function () {
-        return toMilis(this.sleepTime.hours, this.sleepTime.minutes);
-    }
+
+const PROPERTIES = {
+    wakeClock: new Clock(6, 0),
+    sleepDuration: new Duration(0, 0, 15, 7),
 };
 
-function toMilis(hours = 0, minutes = 0, seconds = 0) {
-    return ((hours * 60 + minutes) * 60 + seconds) * 1000;
+function getRemainingDuration(date = new Date()) {
+    return new Promise((res) => {
+        const currentClock = Clock.extractCurrentClock(date);
+        const wakeClock = PROPERTIES.wakeClock;
+        const gap = currentClock.differentFrom(wakeClock);
+        if (gap.negative) {
+            res(PROPERTIES.sleepDuration.add(gap).contrast);
+            return;
+        }
+        res(DAY_DURATION.minus(gap).minus(PROPERTIES.sleepDuration));
+    });
 }
 
-function toHMS(milis = 0) {
-    var s = Math.round(milis / 1000);
-    var m = Math.floor(s / 60);
-    s %= 60;
-    var h = Math.floor(m / 60);
-    m %= 60;
-    return {
-        hours: h,
-        minutes: m,
-        seconds: s
-    }
-}
-
-function getRemainingHMS() {
-    const date = new Date();
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const seconds = date.getSeconds();
-    const currentMilis = toMilis(hours, minutes, seconds);
-    const wakingTimeMilis = STATE.getWakingTimeInMilis();
-    const sleepTimeMilis = STATE.getSleepTimeInMilis();
-    var gapMilis = Math.abs(currentMilis - wakingTimeMilis);
-    if (currentMilis > wakingTimeMilis) {
-        gapMilis = toMilis(24) - gapMilis;
-    }
-    if (gapMilis < sleepTimeMilis) {
-        const hms = toHMS(sleepTimeMilis - gapMilis);
-        hms.overnight = true;
-        return hms;
-    }
-    return toHMS(gapMilis - sleepTimeMilis);
-}
 
 function update() {
-    const hms = getRemainingHMS();
-    if (STATE.isRemainingTimeDifferent(hms)) {
-        STATE.remainingTime = hms;
-        if (hms.overnight) {
-            document.body.classList.add("contrast");
-            minusElem.hidden = false;
-        } else {
-            minusElem.hidden = true;
-        }
-        hourElem.innerText = String(hms.hours).padStart(2, '0');
-        minuteElem.innerText = String(hms.minutes).padStart(2, '0');
-        secondElem.innerText = String(hms.seconds).padStart(2, '0');
-    }
     window.requestAnimationFrame(update);
+    getRemainingDuration(new Date()).then(updateClock);
+}
+
+function updateClock(duration = new Duration()) {
+    if (duration.negative) {
+        document.body.classList.add("contrast");
+        minusElem.hidden = false;
+    } else {
+        document.body.classList.remove("contrast");
+        minusElem.hidden = true;
+    }
+    hourElem.textContent = String(duration.hour).padStart(2, '0');
+    minuteElem.textContent = String(duration.minute).padStart(2, '0');
+    secondElem.textContent = String(duration.second).padStart(2, '0');
+    milisecondElem.textContent = String(duration.milisecond).padStart(3, '0');
 }
 
 window.requestAnimationFrame(update);
