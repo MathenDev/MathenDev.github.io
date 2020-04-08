@@ -102,7 +102,7 @@ function update() {
 
 function updateClock(duration = new Duration()) {
     const previousDuration = PROPERTIES.previousDuration;
-    if (previousDuration.negative !== duration.negative) {
+    if (previousDuration.negative != duration.negative) {
         if (duration.negative) {
             document.body.classList.add("contrast");
             minusElem.hidden = false;
@@ -111,14 +111,18 @@ function updateClock(duration = new Duration()) {
             minusElem.hidden = true;
         }
     }
-    if (previousDuration.hour != duration.hour)
-        hourElem.textContent = String(duration.hour).padStart(2, '0');
-    if (previousDuration.minute != duration.minute)
-        minuteElem.textContent = String(duration.minute).padStart(2, '0');
-    if (previousDuration.second != duration.second)
-        secondElem.textContent = String(duration.second).padStart(2, '0');
-    if (previousDuration.milisecond != duration.milisecond)
-        milisecondElem.textContent = String(duration.milisecond).padStart(3, '0');
+    const hour = duration.hour;
+    if (previousDuration.hour != hour)
+        hourElem.textContent = String(hour).padStart(2, '0');
+    const minute = duration.minute;
+    if (previousDuration.minute != minute)
+        minuteElem.textContent = String(minute).padStart(2, '0');
+    const second = duration.second;
+    if (previousDuration.second != second)
+        secondElem.textContent = String(second).padStart(2, '0');
+    const milisecond = duration.milisecond;
+    if (previousDuration.milisecond != milisecond)
+        milisecondElem.textContent = String(milisecond).padStart(3, '0');
 }
 
 window.requestAnimationFrame(update);
