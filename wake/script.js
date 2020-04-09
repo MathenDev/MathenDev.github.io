@@ -80,12 +80,26 @@ const minusElem = document.getElementById("minus");
 
 
 const PROPERTIES = {
-    wakeClock: new Clock(6, 30),
-    sleepDuration: new Duration(0, 0, 15, 7),
+    wakeClock: new Clock(6, 0, 0),
+    sleepDuration: new Duration(0, 0, 30, 7),
     getWakeDuration: function () {
         return DAY_DURATION.minus(this.sleepDuration);
+    },
+    getWakenRatio: function (duration = new Duration()) {
+        return 1 - duration.getRatio(this.getWakeDuration());
     }
 };
+
+function getBackgroundBrightnessRatio(remainingDuration = new Duration(), wakeRatio = 0) {
+    return -4 * Math.pow(wakeRatio, 2) + 4 * wakeRatio;
+}
+
+function getTextColorBrightnessRatio(backgroundRatio = 0, wakeRatio = 0) {
+    if (backgroundRatio < 0.5) {
+        return backgroundRatio + 0.25;
+    }
+    return 4 * Math.pow(wakeRatio, 2) - 4 * wakeRatio + 1;
+}
 
 function getRemainingDuration(date = new Date()) {
     const currentClock = Clock.extractCurrentClock(date);
@@ -106,15 +120,21 @@ function update() {
 }
 
 function updateClock(duration = new Duration()) {
-    minusElem.hidden = !duration.negative;
-    const bgColor = duration.negative ? 0 : Math.round(duration.getRatio(PROPERTIES.getWakeDuration()) * 255);
-    var textColor = (bgColor + 64) % 256;
+    var bgColor = 0;
+    var textColor = 32;
+    if (!duration.negative) {
+        const wakenRatio = PROPERTIES.getWakenRatio(duration);
+        const bgRatio = getBackgroundBrightnessRatio(duration, wakenRatio);
+        bgColor = Math.round(255 * bgRatio);
+        textColor = Math.round(255 * getTextColorBrightnessRatio(bgRatio, wakenRatio));
+    }
     document.body.style.backgroundColor = `rgb(${bgColor},${bgColor},${bgColor})`;
     document.body.style.color = `rgb(${textColor},${textColor},${textColor})`;
     hourElem.textContent = String(duration.hour).padStart(2, '0');
     minuteElem.textContent = String(duration.minute).padStart(2, '0');
     secondElem.textContent = String(duration.second).padStart(2, '0');
     milisecondElem.textContent = String(duration.milisecond).padStart(3, '0');
+    minusElem.hidden = !duration.negative;
 }
 
 window.requestAnimationFrame(update);
