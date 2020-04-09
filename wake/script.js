@@ -137,4 +137,4 @@ function updateClock(duration = new Duration()) {
     minusElem.hidden = !duration.negative;
 }
 
-window.requestAnimationFrame(update);
+update();
