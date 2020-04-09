@@ -46,6 +46,10 @@ class Duration {
         return new Duration(this.totalMiliseconds - that.totalMiliseconds);
     }
 
+    getRatio(that = new Duration()) {
+        return this.totalMiliseconds / that.totalMiliseconds;
+    }
+
 }
 
 
@@ -78,6 +82,9 @@ const minusElem = document.getElementById("minus");
 const PROPERTIES = {
     wakeClock: new Clock(6, 30),
     sleepDuration: new Duration(0, 0, 15, 7),
+    getWakeDuration: function () {
+        return DAY_DURATION.minus(this.sleepDuration);
+    }
 };
 
 function getRemainingDuration(date = new Date()) {
@@ -99,13 +106,11 @@ function update() {
 }
 
 function updateClock(duration = new Duration()) {
-    if (duration.negative) {
-        document.body.classList.add("contrast");
-        minusElem.hidden = false;
-    } else {
-        document.body.classList.remove("contrast");
-        minusElem.hidden = true;
-    }
+    minusElem.hidden = !duration.negative;
+    const bgColor = duration.negative ? 0 : Math.round(duration.getRatio(PROPERTIES.getWakeDuration()) * 255);
+    var textColor = (bgColor + 64) % 256;
+    document.body.style.backgroundColor = `rgb(${bgColor},${bgColor},${bgColor})`;
+    document.body.style.color = `rgb(${textColor},${textColor},${textColor})`;
     hourElem.textContent = String(duration.hour).padStart(2, '0');
     minuteElem.textContent = String(duration.minute).padStart(2, '0');
     secondElem.textContent = String(duration.second).padStart(2, '0');
